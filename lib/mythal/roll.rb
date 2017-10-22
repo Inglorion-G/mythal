@@ -18,6 +18,8 @@ module Mythal
     attr_reader :dice_string, :number_of_dice, :denomination, :bonus
 
     def result
+      return "can't roll #{dice_string}" unless match_data
+
       @number_of_dice = match_data[1].to_i
       @denomination = match_data[2].to_i
       @bonus = match_data[3]&.to_i || 0
