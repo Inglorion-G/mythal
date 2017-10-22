@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["George Groh"]
   spec.email         = ["george.groh@gmail.com"]
 
-  spec.summary       = %q{CLI for generating D&D encounters, npcs, and items.}
-  spec.description   = %q{Mythal is a DM tool for generating random encounters, npcs, items, and lore for D&D games.}
+  spec.summary       = %q{Roll D&D dice from the command line.}
+  spec.description   = %q{Mythal is a command-line dice roller. Supports d4-d20. e.g. mythal roll 1d20 | mythal roll 3d6}
   spec.homepage      = "https://github.com/Inglorion-G/mythal"
   spec.license       = "MIT"
 
