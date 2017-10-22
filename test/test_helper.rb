@@ -3,3 +3,4 @@ require "mythal"
 
 require "minitest/autorun"
 require "minitest/spec"
+require "pry"
