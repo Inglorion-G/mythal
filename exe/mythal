@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
 
 require "mythal"
+
+Mythal::CLI.start(ARGV)
