@@ -1,4 +1,5 @@
 # Mythal
+![build status](https://travis-ci.org/Inglorion-G/mythal.svg?branch=master)
 
 ## Installation
 
