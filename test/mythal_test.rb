@@ -1,11 +1,15 @@
 require "test_helper"
 
 class MythalTest < Minitest::Test
-  def test_that_it_has_a_version_number
-    refute_nil ::Mythal::VERSION
+  extend Minitest::Spec::DSL
+
+  subject do
+    Mythal
   end
 
-  # def test_it_does_something_useful
-  #   assert false
-  # end
+  describe "version" do
+    it "has a version number" do
+      refute_nil ::Mythal::VERSION
+    end
+  end
 end
