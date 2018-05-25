@@ -19,6 +19,31 @@ Or install it yourself as:
 
 ## Usage
 
+Roll dice on command line!
+
+```
+$ mythal roll 1d20
+rolling d20... 7
+
+$ mythal roll 5d8 + 4
+rolling d8... 7
+rolling d8... 3
+rolling d8... 3
+rolling d8... 5
+rolling d8... 3
+25
+```
+
+Generate quick NPC ideas!
+
+```
+$ mythal npc
+timid tiefling paladin
+
+$ mythal npc
+drunk elf wizard
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
