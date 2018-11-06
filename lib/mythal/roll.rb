@@ -6,7 +6,7 @@ module Mythal
     NUMBER_OF_DICE = 1..100
 
     def initialize(*dice_string)
-      @dice_string = dice_string.join
+      @dice_string = dice_string.join.gsub(" ", '')
     end
 
     def call
@@ -15,35 +15,70 @@ module Mythal
 
     private
 
-    attr_reader :dice_string, :number_of_dice, :denomination, :bonus
+    attr_reader :dice_string, :number_of_dice, :denomination, :modifier
 
-    def result
-      return "can't roll #{dice_string}" unless match_data
+    class DiceRollResult
+      attr_reader :rolls, :modifier, :message, :total, :success
 
-      @number_of_dice = match_data[1].to_i
-      @denomination = match_data[2].to_i
-      @bonus = match_data[3] ? match_data[3].to_i : 0
+      def initialize(rolls: [], modifier: 0, message: "", total: 0, success: false)
+        @rolls = rolls
+        @modifier = modifier
+        @success = success
+        @message = message
+        @total = total
+      end
 
-      return "can't roll #{dice_string}" unless valid_denomination?
-      return "can only roll #{min_dice} - #{max_dice} dice" unless valid_number_of_dice?
-
-      random_dice_roll + bonus
-    end
-
-    def random_dice_roll
-      number_of_dice.times.inject(0) do |memo, _val|
-        current_roll = rand(1..denomination)
-        puts "rolling d#{denomination}... #{current_roll}"
-        memo += current_roll
+      def success?
+        success
       end
     end
 
+    def result
+      return DiceRollResult.new(message: "can't roll #{dice_string}") unless match_data
+
+      parse_input_string
+
+      return DiceRollResult.new(message: "can't roll #{dice_string}") unless valid_denomination?
+      return DiceRollResult.new(message: "can only roll #{min_dice} - #{max_dice} dice") unless valid_number_of_dice?
+
+      rolls = Array.new(number_of_dice) { random_dice_roll }
+      total = rolls.inject(:+) + modifier
+      message = format_output_message(rolls, total)
+
+      DiceRollResult.new(
+        rolls: rolls,
+        total: total,
+        message: message,
+        success: true,
+        modifier: modifier,
+      )
+    end
+
+    def format_output_message(rolls, total)
+      subtotal = rolls.inject(:+)
+      sign = modifier > 0 ? "+" : "-"
+      messages = rolls.map { |roll| "rolling d#{denomination}... #{roll}" }
+      messages << "#{subtotal} #{sign} #{modifier.abs}" unless modifier.zero?
+      messages << total
+      messages.join("\n")
+    end
+
     def match_data
-      @match_data ||= (pattern.match(dice_string))
+      @match_data ||= pattern.match(dice_string)
+    end
+
+    def parse_input_string
+      @number_of_dice = match_data[1].to_i
+      @denomination = match_data[2].to_i
+      @modifier = match_data[3] ? match_data[3].to_i : 0
+    end
+
+    def random_dice_roll
+      rand(1..denomination)
     end
 
     def pattern
-      @pattern ||= /^(-?\d+)d(\d+)\+?(\d+)?$/
+      @pattern ||= /^(-?\d+)d(\d+)?([+-]\d+)?$/
     end
 
     def valid_denomination?

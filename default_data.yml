@@ -1,0 +1,49 @@
+traits:
+  - bombastic
+  - scrappy
+  - nimble
+  - argumentative
+  - grumpy
+  - drunk
+  - overly friendly
+  - touchy
+  - flirtatious
+  - ponderous
+  - inquisitive
+  - skeptical
+  - ruminating
+  - articulate
+  - ejaculatory (in terms of sound)
+  - timid
+  - bold
+  - dubious
+  - overly sympathetic
+  - boorish
+  - feckless
+  - nefarious
+  - honorable
+  - spasmodic
+
+races:
+  - orc
+  - half-orc
+  - human
+  - elf
+  - half-elf
+  - halfling
+  - dragonborn
+  - tiefling
+  - dwarf
+  - gnome
+
+dnd_classes:
+  - fighter
+  - rogue
+  - wizard
+  - sorceror
+  - druid
+  - cleric
+  - bard
+  - monk
+  - warlock
+  - paladin

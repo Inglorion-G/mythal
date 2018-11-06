@@ -4,16 +4,20 @@ class Mythal::NpcTest < Minitest::Test
   extend Minitest::Spec::DSL
 
   subject do
-    Mythal::Npc
+    Mythal::Npc.call(config: config)
+  end
+
+  let(:config) do
+    Mythal::Config.new(default_data: {
+      "traits" => ["funky"],
+      "races" => ["gnome"],
+      "dnd_classes" => ["druid"],
+    })
   end
 
   describe "::call" do
-    it "responds" do
-      assert_respond_to subject, :call
-    end
-
-    it "returns a string" do
-      assert subject.call.is_a?(String)
+    it "returns a string describing an NPC" do
+      assert_equal "funky gnome druid", subject
     end
   end
 end
