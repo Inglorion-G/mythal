@@ -20,11 +20,7 @@ module Mythal
     end
 
     def config
-      if user_overrides.empty?
-        @config ||= YAML.load(File.read(config_file))
-      else
-        user_overrides
-      end
+      @config ||= user_overrides.empty? ? YAML.load(File.read(config_file)) : user_overrides
     end
 
     private
