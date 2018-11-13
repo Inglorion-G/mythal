@@ -3,21 +3,36 @@ require "pathname"
 
 module Mythal
   class Config
-    def initialize(default_data: {})
-      @default_data = default_data
+    def initialize(user_overrides: {})
+      @user_overrides = user_overrides
     end
 
-    def defaults_file
-      Pathname.new(File.expand_path("../../../default_data.yml", __FILE__))
+    def traits
+      config["traits"]
     end
 
-    def defaults
-      return default_data unless default_data.empty?
-      YAML.load(File.read(defaults_file))
+    def races
+      config["races"]
+    end
+
+    def dnd_classes
+      config["dnd_classes"]
+    end
+
+    def config
+      if user_overrides.empty?
+        @config ||= YAML.load(File.read(config_file))
+      else
+        user_overrides
+      end
     end
 
     private
 
-    attr_reader :default_data
+    attr_reader :user_overrides
+
+    def config_file
+      Pathname.new(File.expand_path("../../../config.yml", __FILE__))
+    end
   end
 end

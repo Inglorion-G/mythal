@@ -8,7 +8,7 @@ class Mythal::NpcTest < Minitest::Test
   end
 
   let(:config) do
-    Mythal::Config.new(default_data: {
+    Mythal::Config.new(user_overrides: {
       "traits" => ["funky"],
       "races" => ["gnome"],
       "dnd_classes" => ["druid"],

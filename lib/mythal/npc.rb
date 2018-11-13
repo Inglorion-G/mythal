@@ -19,15 +19,15 @@ module Mythal
     end
 
     def trait
-      config.defaults["traits"].sample
+      config.traits.sample
     end
 
     def race
-      config.defaults["races"].sample
+      config.races.sample
     end
 
     def dnd_class
-      config.defaults["dnd_classes"].sample
+      config.dnd_classes.sample
     end
   end
 end
