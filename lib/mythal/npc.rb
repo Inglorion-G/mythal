@@ -7,7 +7,25 @@ module Mythal
     end
 
     def call
-      character_description
+      self
+    end
+
+    def stats
+      @stats ||= Mythal::Stats.new
+    end
+
+    def message
+      <<~OUTPUT
+        ---
+        #{character_description}
+        ---
+        Armor Class: #{stats.armor_class}
+        Hit Points: #{stats.hit_points}
+        Speed: #{stats.speed}ft
+        Attack: +#{stats.attack_bonus}
+        Damage: #{stats.damage_per_round} slashing
+        ---
+      OUTPUT
     end
 
     private
@@ -18,16 +36,16 @@ module Mythal
       trait + " " + race + " " + dnd_class
     end
 
-    def trait
-      config.traits.sample
+    def dnd_class
+      config.dnd_classes.sample
     end
 
     def race
       config.races.sample
     end
 
-    def dnd_class
-      config.dnd_classes.sample
+    def trait
+      config.traits.sample
     end
   end
 end
