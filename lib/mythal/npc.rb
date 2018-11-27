@@ -2,8 +2,10 @@ module Mythal
   class Npc
     include Procto.call
 
-    def initialize(config:)
+    def initialize(config:, challenge_rating: "1/4", user_overrides: {})
       @config = config
+      @challenge_rating = challenge_rating
+      @user_overrides = user_overrides
     end
 
     def call
@@ -11,7 +13,26 @@ module Mythal
     end
 
     def stats
-      @stats ||= Mythal::Stats.new
+      @stats ||= Mythal::Stats.new(
+        challenge_rating: challenge_rating,
+        options: (user_overrides || {}),
+      )
+    end
+
+    def character_description
+      trait + " " + race + " " + dnd_class
+    end
+
+    def dnd_class
+      config.dnd_classes.sample
+    end
+
+    def race
+      config.races.sample
+    end
+
+    def trait
+      config.traits.sample
     end
 
     def message
@@ -30,22 +51,6 @@ module Mythal
 
     private
 
-    attr_reader :config
-
-    def character_description
-      trait + " " + race + " " + dnd_class
-    end
-
-    def dnd_class
-      config.dnd_classes.sample
-    end
-
-    def race
-      config.races.sample
-    end
-
-    def trait
-      config.traits.sample
-    end
+    attr_reader :config, :user_overrides, :challenge_rating
   end
 end

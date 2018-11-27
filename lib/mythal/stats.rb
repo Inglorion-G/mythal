@@ -20,7 +20,7 @@ module Mythal
     attr_reader :challenge_rating, :options
 
     def initialize(challenge_rating: "1/4", options: {})
-      @challenge_rating = challenge_rating
+      @challenge_rating = challenge_rating || "1/4"
       @options = options
       post_initialize
     end

@@ -35,9 +35,6 @@ class Mythal::NpcTest < Minitest::Test
   describe "#stats" do
     it "generates a stat block for an NPC" do
       stats = subject.stats
-      assert_respond_to stats, :hit_points
-      assert_respond_to stats, :armor_class
-      assert_respond_to stats, :speed
 
       named_stats = %i[
         hit_points
@@ -52,8 +49,20 @@ class Mythal::NpcTest < Minitest::Test
       end
     end
 
-    it "generates a value for hitpoints between 1 and 10" do
-      assert subject.stats.hit_points.between?(36, 49)
+    describe "challenge_rating" do
+      subject do
+        Mythal::Npc
+      end
+
+      it "generates a 1/4 challenge rating NPC if no CR is specified" do
+        npc = subject.call(config: config)
+        assert_equal "1/4", npc.stats.challenge_rating
+      end
+
+      it "generates an appropriate challenge rating if CR is specified" do
+        npc = subject.call(config: config, challenge_rating: "1/8")
+        assert_equal "1/8", npc.stats.challenge_rating
+      end
     end
   end
 end
