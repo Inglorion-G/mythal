@@ -21,13 +21,17 @@ class Mythal::CLITest < Minitest::Test
     end
 
     it "prints out a roll with a negative modifier" do
-      assert_output(/rolling d20... \d+\n\d+ \- 5\n\d+/) { subject.roll("1d20 - 5") }
+      assert_output(/rolling d20... \d+\n\d+ \- 5\n\d+/) { subject.roll("2d20 - 5") }
     end
   end
 
   describe "#npc" do
     it "responds" do
       assert_respond_to subject, :npc
+    end
+
+    it "prints out a message" do
+      assert_output(/\w+/) { subject.npc }
     end
   end
 end

@@ -7,6 +7,13 @@ class Mythal::RollTest < Minitest::Test
     Mythal::Roll
   end
 
+  describe "cli interface" do
+    it "responds to #message" do
+      response_obj = subject.call("1d20")
+      assert_respond_to response_obj, :message
+    end
+  end
+
   describe "::call" do
     it "returns a dice result object" do
       result = subject.call("1d20")
