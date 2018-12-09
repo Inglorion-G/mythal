@@ -13,16 +13,9 @@ module Mythal
 
     def npc
       puts Mythal::Npc.call(
-        config: config,
         challenge_rating: options[:challenge_rating],
         user_overrides: options[:options]&.transform_keys(&:to_sym),
       ).message
-    end
-
-    private
-
-    def config
-      @config ||= Mythal::Config.new
     end
   end
 end

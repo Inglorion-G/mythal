@@ -4,15 +4,7 @@ class Mythal::NpcTest < Minitest::Test
   extend Minitest::Spec::DSL
 
   subject do
-    Mythal::Npc.call(config: config)
-  end
-
-  let(:config) do
-    Mythal::Config.new(user_overrides: {
-      "traits" => ["funky"],
-      "races" => ["gnome"],
-      "dnd_classes" => ["druid"],
-    })
+    Mythal::Npc.call
   end
 
   describe "responds to cli interface" do
@@ -55,12 +47,12 @@ class Mythal::NpcTest < Minitest::Test
       end
 
       it "generates a 1/4 challenge rating NPC if no CR is specified" do
-        npc = subject.call(config: config)
+        npc = subject.call
         assert_equal "1/4", npc.stats.challenge_rating
       end
 
       it "generates an appropriate challenge rating if CR is specified" do
-        npc = subject.call(config: config, challenge_rating: "1/8")
+        npc = subject.call(challenge_rating: "1/8")
         assert_equal "1/8", npc.stats.challenge_rating
       end
     end

@@ -1,16 +1,21 @@
 require "test_helper"
-require "mythal/stats"
 
 class Mythal::StatsTest < Minitest::Test
   extend Minitest::Spec::DSL
 
-  subject do
-    Mythal::Stats.new(options: options)
-  end
-
   describe "#challenge_rating" do
     subject do
       Mythal::Stats
+    end
+
+    let(:valid_challenge_ratings) do
+      %w[
+        0
+        1/8
+        1/4
+        1/2
+        1
+      ]
     end
 
     it "defaults to a challenge rating of 1/4 if none is specified" do
@@ -21,17 +26,15 @@ class Mythal::StatsTest < Minitest::Test
       assert_equal "1", subject.new(challenge_rating: "1").challenge_rating
     end
 
-    it "accepts challenge ratings in the range 0..30" do
-      (0..30).each do |i|
-        cr = i.to_s
+    it "accepts challenge ratings as string fractions `1/8`, `1/4` and `1/2`" do
+      valid_challenge_ratings.each do |cr|
         assert_equal cr, subject.new(challenge_rating: cr).challenge_rating
       end
     end
 
-    it "accepts challenge ratings as string fractions `1/8`, `1/4` and `1/2`" do
-      ["1/8", "1/4", "1/2"].each do |cr|
-        assert_equal cr, subject.new(challenge_rating: cr).challenge_rating
-      end
+    it "falls back to the default if a passed-in challenge rating is invalid" do
+      stat_block = subject.new(challenge_rating: 9_999)
+      assert_equal "1/4", stat_block.challenge_rating
     end
   end
 
@@ -64,30 +67,32 @@ class Mythal::StatsTest < Minitest::Test
   end
 
   describe "#attributes" do
+    subject do
+      Mythal::Stats.new(options: options)
+    end
+
     describe "when no options are passed" do
       let(:options) { {} }
 
       it "returns a hash of attributes" do
-        expected = {
-          challenge_rating: "1/4",
-          proficiency_bonus: 2,
-          armor_class: 13,
-          damage_per_round: 5,
-          attack_bonus: 2,
-          save_dc: 13,
-          speed: 30,
-          str: 15,
-          dex: 14,
-          con: 13,
-          int: 12,
-          wis: 10,
-          cha: 8,
-        }
+        expected_keys = %i[
+          challenge_rating
+          proficiency_bonus
+          armor_class
+          damage_per_round
+          attack_bonus
+          hit_points
+          save_dc
+          speed
+          str
+          dex
+          con
+          int
+          wis
+          cha
+        ]
 
-        dynamic_keys = [:hit_points]
-        actual = subject.attributes.reject { |k| dynamic_keys.include?(k) }
-
-        assert_equal expected, actual
+        assert_equal expected_keys.sort, subject.attributes.keys.sort
       end
     end
 

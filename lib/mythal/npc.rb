@@ -2,8 +2,7 @@ module Mythal
   class Npc
     include Procto.call
 
-    def initialize(config:, challenge_rating: "1/4", user_overrides: {})
-      @config = config
+    def initialize(challenge_rating: "1/4", user_overrides: {})
       @challenge_rating = challenge_rating
       @user_overrides = user_overrides
     end
@@ -42,15 +41,20 @@ module Mythal
         ---
         Armor Class: #{stats.armor_class}
         Hit Points: #{stats.hit_points}
-        Speed: #{stats.speed}ft
         Attack: +#{stats.attack_bonus}
         Damage: #{stats.damage_per_round} slashing
+        Speed: #{stats.speed}ft
+        Challenge Rating: #{stats.challenge_rating}
         ---
       OUTPUT
     end
 
     private
 
-    attr_reader :config, :user_overrides, :challenge_rating
+    attr_reader :user_overrides, :challenge_rating
+
+    def config
+      Mythal::Config
+    end
   end
 end

@@ -5,8 +5,8 @@ module Mythal
       proficiency_bonus
       armor_class
       hit_points
-      attack_bonus
       damage_per_round
+      attack_bonus
       save_dc
       speed
       str
@@ -17,10 +17,12 @@ module Mythal
       cha
     ]
 
+    VALID_CHALLENGE_RATINGS = %w[0 1/8 1/4 1/2 1 2]
+
     attr_reader :challenge_rating, :options
 
     def initialize(challenge_rating: "1/4", options: {})
-      @challenge_rating = challenge_rating || "1/4"
+      @challenge_rating = init_challenge_rating(challenge_rating)
       @options = options
       post_initialize
     end
@@ -28,12 +30,12 @@ module Mythal
     def attributes
       {
         challenge_rating: challenge_rating,
-        proficiency_bonus: 2,
-        armor_class: 13,
+        proficiency_bonus: stats_by_cr["proficiency_bonus"],
+        armor_class: stats_by_cr["armor_class"],
         hit_points: init_hit_points,
-        damage_per_round: 5,
-        attack_bonus: 2,
-        save_dc: 13,
+        damage_per_round: init_damage_per_round,
+        attack_bonus: stats_by_cr["attack_bonus"],
+        save_dc: stats_by_cr["save_dc"],
         speed: 30,
         str: 15,
         dex: 14,
@@ -44,24 +46,37 @@ module Mythal
       }.merge(user_overrides)
     end
 
+    private
+
+    def config
+      Mythal::Config
+    end
+
+    def init_damage_per_round
+      Range.new(*stats_by_cr["damage_per_round"].split("..").map(&:to_i)).to_a.sample
+    end
+
+    def stats_by_cr
+      @stats_by_cr ||= begin
+        raw_stats = config.npc_stats_by_challenge_rating
+        raw_stats["Headers"].zip(raw_stats[challenge_rating]).to_h
+      end
+    end
+
+    def init_challenge_rating(cr)
+      default_cr = "1/4"
+      return default_cr unless VALID_CHALLENGE_RATINGS.include?(cr)
+      cr
+    end
+
     def init_hit_points
-      default_hit_points[challenge_rating].to_a.sample
+      Range.new(*stats_by_cr["hit_points"].split("..").map(&:to_i)).to_a.sample
     end
 
     def user_overrides
       options.select do |k, _v|
         VALID_ATTRS.include?(k)
       end
-    end
-
-    def default_hit_points
-      {
-        "0" => 1..6,
-        "1/8" => 7..35,
-        "1/4" => 36..49,
-        "1/2" => 50..70,
-        "1" => 71..85,
-      }
     end
 
     def post_initialize
